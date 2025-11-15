@@ -294,6 +294,7 @@
   background: radial-gradient(circle at 30% 15%, #f7c08c, #2b1826);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
+  margin: auto;
 }
 
 .about-photo__frame {
@@ -425,6 +426,31 @@
 .contact__hint {
   font-size: 0.75rem;
   color: var(--color-text-muted);
+}
+/* logo / banner no topo do hero */
+.hero__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+
+.hero__logo-image {
+  min-width: 665px;
+  width: min(60vw, 260px);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.65));
+}
+.about-photo__image {
+  width: 207px;
+  height: 277px;
+  border-radius: 15px;
+}
+
+/* se quiser, em telas bem pequenas, um pouco menor */
+@media (max-width: 480px) {
+  .hero__logo-image {
+    min-width: 280px;
+  }
 }
 
 /* Responsivo */
