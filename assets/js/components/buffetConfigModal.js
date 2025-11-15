@@ -25,15 +25,15 @@ function formatCurrency(value) {
 function costWeightFromCategory(category) {
   switch (category) {
     case "low":
-      return 0.9;
+      return 1.05;
     case "medium":
-      return 1.0;
+      return 1.1;
     case "high":
-      return 1.15;
+      return 1.2;
     case "premium":
       return 1.3;
     default:
-      return 1.0;
+      return 1.1;
   }
 }
 
@@ -223,35 +223,47 @@ export function initBuffetConfigModal() {
 
       const selectedCount = selectedIds.length;
 
-      // 1) cobrar opções extras além do padrão
+      // 1) cobrar opções extras além do padrão (funciona para single e multi)
       if (extraPercent && selectedCount > baseCount) {
         const extraCount = selectedCount - baseCount;
         factor *= 1 + (extraPercent / 100) * extraCount;
       }
 
       // 2) custo relativo das opções (strogonoff vs carne assada etc.)
-      function avgWeight(ids) {
-        if (!ids || !ids.length) return 1;
-        let sum = 0;
-        let count = 0;
-        ids.forEach((id) => {
-          const opt = group.options.find((o) => o.id === id);
-          const w = costWeightFromCategory(opt?.costCategory);
-          sum += w;
-          count++;
-        });
-        return count ? sum / count : 1;
-      }
+      //    ➜ só faz sentido para grupos de uma escolha (radio)
+      if (group.type === "single") {
+        function avgWeight(ids) {
+          if (!ids || !ids.length) return 1;
+          let sum = 0;
+          let count = 0;
+          ids.forEach((id) => {
+            const opt = group.options.find((o) => o.id === id);
+            const w = costWeightFromCategory(opt?.costCategory);
+            sum += w;
+            count++;
+          });
+          return count ? sum / count : 1;
+        }
 
-      const baseWeight = defaultIds.length ? avgWeight(defaultIds) : 1;
-      const selWeight = selectedIds.length
-        ? avgWeight(selectedIds)
-        : baseWeight;
+        const baseWeight = defaultIds.length ? avgWeight(defaultIds) : 1;
+        const selWeight = selectedIds.length
+          ? avgWeight(selectedIds)
+          : baseWeight;
 
-      if (baseWeight && selWeight) {
-        factor *= selWeight / baseWeight;
+        if (baseWeight && selWeight) {
+          const ratio = selWeight / baseWeight;
+          // nunca deixamos o fator diminuir; só aumenta se for mais caro
+          if (ratio > 1) {
+            factor *= ratio;
+          }
+        }
       }
     });
+
+    // 🔒 garante que nunca fique abaixo do valor de referência
+    if (factor < 1) {
+      factor = 1;
+    }
 
     const perGuestAdjusted = basePerGuest * factor;
     const total = perGuestAdjusted * effectiveGuests;
