@@ -20,7 +20,7 @@ export function initMenuCart(menuItems) {
 
   const orderDetailsModal = initOrderDetailsModal();
 
-  const defaultPhone = "5500000000000";
+  const defaultPhone = "553491328323";
   const panelPhone = orderPanel.dataset.whatsapp;
   const phone =
     panelPhone && panelPhone.trim().length > 0
