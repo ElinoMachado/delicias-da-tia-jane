@@ -1,0 +1,72 @@
+/* animations.css */
+
+/* Fundo levemente animado, bem sutil */
+body.page {
+  background-size: 160% 160%;
+  animation: pageGradient 26s ease-in-out infinite alternate;
+}
+
+@keyframes pageGradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 40% 60%;
+  }
+  100% {
+    background-position: 80% 10%;
+  }
+}
+
+/* Estado inicial das animações (usado com .js-animate) */
+.js-animate {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+/* Variantes */
+[data-animate="fade-up"].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-animate="fade-left"] {
+  transform: translateX(18px);
+}
+
+[data-animate="fade-left"].is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+[data-animate="fade-right"] {
+  transform: translateX(-18px);
+}
+
+[data-animate="fade-right"].is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Fade-in da modal */
+.modal--hidden {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.modal--visible {
+  opacity: 1;
+}
+
+.modal__content {
+  /* já tem transition em sections.css, aqui reforçamos que vem com opacidade animada */
+  transition: opacity var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+/* Pequena animação de “respirar” para cards em destaque (opcional, só hero) */
+.hero-card:hover {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+}
